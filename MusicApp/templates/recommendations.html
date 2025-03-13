@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Song Recommendations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(() => document.getElementById("loader").classList.add("hidden"), 2000);
+        });
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 min-h-screen flex items-center">
+    <div class="container mx-auto px-4 py-8">
+        <a href="/" class="inline-block border border-gray-500 px-4 py-2 rounded-md hover:bg-gray-700">⬅ Back to
+            Search</a>
+        <h2 class="text-center text-3xl font-bold my-6">🎵 Song Recommendations</h2>
+
+        <!-- Loader -->
+        <div id="loader" class="flex justify-center my-6">
+            <div class="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Selected Song -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h4 class="text-xl font-semibold text-center">Selected Song</h4>
+                <div class="text-center">
+                    <img src="{{ song.artwork_url or '' }}" alt="Album Art"
+                        class="w-52 h-52 object-cover mx-auto rounded-md shadow-lg transition-transform hover:scale-105">
+                    <h6 class="mt-4 text-lg font-medium">{{ song.track_name }}</h6>
+                    <p class="text-sm text-gray-400">{{ song.artist_name }}</p>
+                    <div class="mt-2 text-sm text-gray-300">
+                        <p><strong>📅 Year:</strong> {{ song.year }}</p>
+                        <p><strong>💿 Album:</strong> {{ song.album_name }}</p>
+                        <p><strong>🗣 Language:</strong> {{ song.language }}</p>
+                        <p><strong>🎶 Genre:</strong> {{ song.genre_name }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div>
+                <h4 class="text-xl font-semibold">Recommended Songs</h4>
+                {% if recommendations %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    {% for rec in recommendations %}
+                    <div
+                        class="bg-gray-800 p-4 rounded-lg shadow-lg text-center transition-all transform hover:scale-105">
+                        <img src="{{ rec.artwork_url or '' }}" alt="Album Art"
+                            class="w-full h-40 object-cover rounded-md shadow-md">
+                        <h6 class="mt-2 text-lg font-medium">{{ rec.track_name }}</h6>
+                        <p class="text-sm text-gray-400">{{ rec.artist_name }}</p>
+                        <a href="{{ url_for('recommend', song_id=rec.track_id) }}"
+                            class="inline-block bg-green-500 text-white px-3 py-1 mt-3 rounded-md hover:bg-green-600 text-sm">Get
+                            Recommendations</a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-yellow-400 mt-4">No recommendations found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

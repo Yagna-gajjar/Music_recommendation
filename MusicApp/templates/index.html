@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Song Search | Music Recommender</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        function showLoader() {
+            document.getElementById("loader").classList.remove("hidden");
+        }
+    </script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 min-h-screen flex items-center">
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-center text-3xl font-bold mb-6">🎵 Search Your Favorite Songs</h2>
+
+        <!-- Search Form -->
+        <form method="POST" class="flex items-center justify-center mb-6" onsubmit="showLoader()">
+            <input type="text" name="search_query"
+                class="w-1/2 p-3 border border-gray-600 bg-gray-800 text-gray-200 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter a song name..." required>
+            <button class="bg-blue-500 text-white px-4 py-3 rounded-r-lg hover:bg-blue-600 transition-all"
+                type="submit">Search</button>
+        </form>
+
+        <!-- Loader -->
+        <div id="loader" class="hidden flex justify-center my-6">
+            <div class="w-12 h-12 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+
+        {% if query %}
+        <h4 class="text-lg font-semibold">Results for: <em class="text-blue-400">{{ query }}</em></h4>
+
+        {% if songs %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-4">
+            {% for song in songs %}
+            <div
+                class="bg-gray-800 p-4 rounded-lg shadow-lg text-center transition-transform transform hover:scale-105">
+                <img src="{{ song.artwork_url or '' }}" alt="Album Art"
+                    class="w-full h-40 object-cover rounded-md shadow-md">
+                <h6 class="mt-2 text-lg font-medium">{{ song.track_name }}</h6>
+                <p class="text-sm text-gray-400">{{ song.artist_name }}</p>
+                <a href="{{ url_for('recommend', song_id=song.track_id) }}"
+                    class="inline-block bg-green-500 text-white px-3 py-1 mt-3 rounded-md hover:bg-green-600 transition-all text-sm">Get
+                    Recommendations</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-yellow-400 mt-4">No songs found. Try another name.</p>
+        {% endif %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
