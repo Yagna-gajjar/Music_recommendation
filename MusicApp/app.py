@@ -5,8 +5,6 @@ from sklearn.neighbors import NearestNeighbors
 
 app = Flask(__name__)
 
-app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-
 # Load data with error handling
 try:
     songs_df = pd.read_csv('./my_songs.csv')
