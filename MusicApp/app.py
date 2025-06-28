@@ -5,7 +5,6 @@ from sklearn.neighbors import NearestNeighbors
 
 app = Flask(__name__)
 
-# Load data with error handling
 try:
     songs_df = pd.read_csv('./my_songs.csv')
     processed_data = np.load('./processed_song_features.npy')
@@ -13,11 +12,9 @@ except FileNotFoundError as e:
     print(f"File not found: {e}")
     exit(1)
 
-# Initialize the KNN model
 knn_model = NearestNeighbors(n_neighbors=9, metric='euclidean')
 knn_model.fit(processed_data)
 
-# Recommendation function
 def recommend_next_song(song_id):
     track = songs_df[songs_df['track_id'] == song_id]
 
@@ -30,7 +27,6 @@ def recommend_next_song(song_id):
     recommended_songs = songs_df.iloc[indices[0][1:]]
     return recommended_songs.sort_values(by='popularity', ascending=False, na_position='last').to_dict(orient="records")
 
-# Homepage: Search Songs
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -40,7 +36,6 @@ def home():
             return render_template("index.html", songs=filtered_df.to_dict(orient="records"), query=search_query)
     return render_template("index.html", songs=[])
 
-# Recommendation Page
 @app.route('/recommend/<song_id>')
 def recommend(song_id):
     selected_song = songs_df[songs_df["track_id"] == song_id].iloc[0].to_dict()
